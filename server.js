@@ -24,6 +24,19 @@ app.get("/api/hello", function (req, res) {
 });
 
 /**
+ * /api
+ * ---------
+ * returns the current date as UNIX timestamp and UTC string
+ */
+app.get("/api", (req, res) => {
+  date = new Date();
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString(),
+  });
+});
+
+/**
  * /api/:time
  * ----------
  * can take an input of either a unix timestamp (in milliseconds) or
@@ -31,9 +44,7 @@ app.get("/api/hello", function (req, res) {
  */
 app.get("/api/:time", (req, res) => {
   let date;
-  if (req.params.time === "") {
-    date = new Date();
-  } else if (!isNaN(req.params.time)) {
+  if (!isNaN(req.params.time)) {
     date = new Date(parseInt(req.params.time, 10));
   } else {
     date = new Date(req.params.time);
@@ -42,12 +53,12 @@ app.get("/api/:time", (req, res) => {
   console.log(date);
   console.log(typeof date);
 
-  if (isNaN(date)) res.json({ error: "Invalid Date" })
+  if (isNaN(date)) res.json({ error: "Invalid Date" });
 
   res.json({
     unix: date.getTime(),
     utc: date.toUTCString(),
-  })
+  });
 });
 
 // listen for requests :)

@@ -30,26 +30,24 @@ app.get("/api/hello", function (req, res) {
  * strings in the format "YYYY-MM-DD"
  */
 app.get("/api/:time", (req, res) => {
-  const timeIn = req.params.time.split("-");
-  if (timeIn.length === 3) {
-    const date = new Date(req.params.time);
-    res.json({
-      unix: date.getTime(),
-      utc: date.toUTCString(),
-    })
-  } else if (timeIn.length === 1) {
-    const timeInt = parseInt(req.params.time, 10);
-    const utc = new Date(timeInt);
-    res.json({
-      unix: timeInt,
-      utc: utc.toUTCString(),
-    });
+  let date;
+  if (req.params.time === "") {
+    date = new Date();
+  } else if (!isNaN(req.params.time)) {
+    date = new Date(parseInt(req.params.time, 10));
   } else {
-    res.json({
-      error:
-        "Invalid Date",
-    });
+    date = new Date(req.params.time);
   }
+
+  console.log(date);
+  console.log(typeof date);
+
+  if (isNaN(date)) res.json({ error: "Invalid Date" })
+
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString(),
+  })
 });
 
 // listen for requests :)

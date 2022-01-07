@@ -23,11 +23,20 @@ app.get("/api/hello", function (req, res) {
   res.json({ greeting: "hello API" });
 });
 
+/**
+ * /api/:time
+ * ----------
+ * can take an input of either a unix timestamp (in milliseconds) or
+ * strings in the format "YYYY-MM-DD"
+ */
 app.get("/api/:time", (req, res) => {
-  // res.json({ time: req.params.time });
   const timeIn = req.params.time.split("-");
   if (timeIn.length === 3) {
-    res.json({ todo: todo })
+    const date = new Date(req.params.time);
+    res.json({
+      unix: date.getTime(),
+      utc: date.toUTCString(),
+    })
   } else if (timeIn.length === 1) {
     const timeInt = parseInt(req.params.time, 10);
     const utc = new Date(timeInt);
